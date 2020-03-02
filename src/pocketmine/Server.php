@@ -136,7 +136,7 @@ use pocketmine\utils\TextWrapper;
 use pocketmine\utils\Utils;
 use pocketmine\utils\UUID;
 use pocketmine\utils\VersionString;
-use pocketmine\network\protocol\Info;
+use pocketmine\network\protocol\Info as ProtocolInfo;
 use pocketmine\level\generator\biome\Biome;
 use pocketmine\scheduler\FileWriteTask;
 use pocketmine\entity\animal\walking\Chicken;
