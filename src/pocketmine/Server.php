@@ -135,6 +135,8 @@ use pocketmine\utils\TextFormat;
 use pocketmine\utils\TextWrapper;
 use pocketmine\utils\Utils;
 use pocketmine\utils\UUID;
+use pocketmine\utils\Color;
+use pocketmine\item\enchantment\EnchantmentLevelTable;
 use pocketmine\utils\VersionString;
 use pocketmine\network\protocol\Info as ProtocolInfo;
 use pocketmine\level\generator\biome\Biome;
@@ -167,6 +169,8 @@ use pocketmine\network\protocol\PEPacket;
 use pocketmine\tile\Beacon;
 use pocketmine\tile\Banner;
 use pocketmine\lang\BaseLang;
+use pocketmine\entity\Attribute;
+
 
 /**
  * The class that manages everything
