@@ -24,9 +24,8 @@ declare(strict_types=1);
 namespace pocketmine\level\format;
 
 use pocketmine\level\format\Chunk;
-use pocketmine\level\format\BaseLevelProvider;
-use pocketmine\level\format\ChunkException;
-use pocketmine\level\format\ChunkUtils;
+use pocketmine\level\format\FullChunk;
+use pocketmine\level\format\generic\BaseLevelProvider;
 use pocketmine\level\format\SubChunk;
 use pocketmine\level\generator\Generator;
 use pocketmine\level\Level;
