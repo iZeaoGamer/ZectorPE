@@ -1498,19 +1498,17 @@ class Server{
 	public function __construct(\ClassLoader $autoloader, \ThreadedLogger $logger, $filePath, $dataPath, $pluginPath){	
 		self::$instance = $this;
 		self::$serverId =  mt_rand(0, PHP_INT_MAX);
+		Generator::addGenerator(Nether::class, "hell");
+			Generator::addGenerator(Nether::class, "nether");
+			Generator::addGenerator(VoidGenerator::class, "void");
+			Generator::addGenerator(Normal2::class, "normal2");
+			Generator::addGenerator(Ender::class, "ender");
 
 		$this->autoloader = $autoloader;
 		self::$sleeper = new \Threaded;
 		$this->logger = $logger;
 		$this->filePath = $filePath;
-		if(!$this->loadLevel("nether")){
-			$this->generateLevel("nether", time(), Generator::getGenerator("nether"));
-		}
-		$this->netherLevel = $this->getLevelByName("nether");
-		if(!$this->loadLevel("ender")){
-			$this->generateLevel("ender", time(), Generator::getGenerator("ender"));
-		}
-		$this->enderLevel = $this->getLevelByName("ender");
+		
 		if(!file_exists($dataPath . "worlds/")){
 			mkdir($dataPath . "worlds/", 0777);
 		}
@@ -1522,6 +1520,14 @@ class Server{
 		if(!file_exists($pluginPath)){
 			mkdir($pluginPath, 0777);
 		}
+		if(!$this->loadLevel("nether")){
+			$this->generateLevel("nether", time(), Generator::getGenerator("nether"));
+		}
+		$this->netherLevel = $this->getLevelByName("nether");
+		if(!$this->loadLevel("ender")){
+			$this->generateLevel("ender", time(), Generator::getGenerator("ender"));
+		}
+		$this->enderLevel = $this->getLevelByName("ender");
 
 		$this->dataPath = realpath($dataPath) . DIRECTORY_SEPARATOR;
 		$this->pluginPath = realpath($pluginPath) . DIRECTORY_SEPARATOR;
@@ -1706,11 +1712,7 @@ class Server{
 		LevelProviderManager::addProvider($this, Anvil::class);
 		LevelProviderManager::addProvider($this, PMAnvil::class);
 		LevelProviderManager::addProvider($this, McRegion::class);
-		Generator::addGenerator(Nether::class, "hell");
-			Generator::addGenerator(Nether::class, "nether");
-			Generator::addGenerator(VoidGenerator::class, "void");
-			Generator::addGenerator(Normal2::class, "normal2");
-			Generator::addGenerator(Ender::class, "ender");
+		
 		
 		foreach((array) $this->getProperty("worlds", []) as $name => $worldSetting){
 			if($this->loadLevel($name) === false){
