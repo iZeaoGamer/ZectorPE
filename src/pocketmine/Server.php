@@ -169,6 +169,7 @@ use pocketmine\network\protocol\PEPacket;
 use pocketmine\tile\Beacon;
 use pocketmine\tile\Banner;
 use pocketmine\lang\BaseLang;
+use pocketmine\event\server\QueryRegenerateEvent;
 use pocketmine\entity\Attribute;
 
 
