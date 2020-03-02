@@ -377,6 +377,11 @@ class Server{
 	public $enderName = "ender";
 	public $enderLevel = null;
 	public $absorbWater = false;
+	
+		
+	public static function getServerId(){
+		return self::$serverId;
+	}
 
 	/**
 	 * @return string
