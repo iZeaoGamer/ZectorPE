@@ -11,6 +11,7 @@ before_script:
  - echo | pecl install channel://pecl.php.net/yaml-2.0.0
 before_install:
   - chmod +x ./tests/travis.sh
+  - chmod +x ./tests/lint.sh
 
 script:
  - ./tests/travis.sh
