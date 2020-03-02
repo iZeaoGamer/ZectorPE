@@ -86,6 +86,7 @@ use pocketmine\entity\monster\walking\Wolf;
 use pocketmine\entity\monster\walking\Zombie;
 use pocketmine\entity\monster\walking\ZombieVillager;
 use pocketmine\entity\Item as DroppedItem;
+use pocketmine\entity\projectile\SplashPotion;
 
 abstract class Entity extends Location implements Metadatable{
 
@@ -320,8 +321,7 @@ abstract class Entity extends Location implements Metadatable{
 		Entity::registerEntity(Snowball::class);
 		Entity::registerEntity(Egg::class);
 		Entity::registerEntity(Villager::class);
-		Entity::registerEntity(Squid::class);
-		Entity::registerEntity(Human::class, true);		
+		Entity::registerEntity(Squid::class);	
 		
 		Entity::registerEntity(Blaze::class);
 		Entity::registerEntity(CaveSpider::class);
