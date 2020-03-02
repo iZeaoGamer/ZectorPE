@@ -60,7 +60,7 @@ function preg_quote_array(array $strings, string $delim = null) : array{
  *
  * @return \Generator|string[]
  */
-function buildPhar(string $pharPath, string $basePath, array $includedPaths, array $metadata, string $stub, int $signatureAlgo = \Phar::SHA1, ?int $compression = null){
+function buildPhar($pharPath, $basePath, $includedPaths, $metadata, $stub, $signatureAlgo = \Phar::SHA1, $compression = null){
 	$basePath = rtrim(str_replace("/", DIRECTORY_SEPARATOR, $basePath), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 	$includedPaths = array_map(function(string $path) : string{
 		return rtrim(str_replace("/", DIRECTORY_SEPARATOR, $path), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
