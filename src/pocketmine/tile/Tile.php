@@ -80,11 +80,11 @@ abstract class Tile extends Position{
 	public static function init(){
 		self::registerTile(Beacon::class);
 		self::registerTile(Bed::class);
-		self::registerTile(BrewingStand::class);
+	//	self::registerTile(BrewingStand::class); todo implement
 		self::registerTile(Cauldron::class);
 		self::registerTile(Chest::class);
 		self::registerTile(Dispenser::class);
-		self::registerTile(DLDetector::class);
+		//self::registerTile(DLDetector::class); todo implement
 		self::registerTile(Dropper::class);
 		self::registerTile(EnchantTable::class);
 		self::registerTile(EnderChest::class);
@@ -93,6 +93,7 @@ abstract class Tile extends Position{
 		self::registerTile(Hopper::class);
 		self::registerTile(ItemFrame::class);
 		self::registerTile(MobSpawner::class);
+		self::registerTile(PistonArm::class);
 		self::registerTile(Sign::class);
 		self::registerTile(Skull::class);
 	}
