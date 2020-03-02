@@ -166,6 +166,7 @@ use pocketmine\event\server\SendRecipiesList;
 use pocketmine\network\protocol\PEPacket;
 use pocketmine\tile\Beacon;
 use pocketmine\tile\Banner;
+use pocketmine\lang\BaseLang;
 
 /**
  * The class that manages everything
