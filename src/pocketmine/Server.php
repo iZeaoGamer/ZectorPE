@@ -1929,7 +1929,6 @@ class Server{
 			Item::init();
 			Biome::init();
 			Effect::init();
-			Attribute::init();
 			EnchantmentLevelTable::init();
 			Color::init();
 			$this->craftingManager = new CraftingManager();
