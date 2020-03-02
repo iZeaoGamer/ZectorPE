@@ -1,54 +1,26 @@
-#!/bin/bash
+#!/bin/sh
 
-PM_WORKERS="auto"
+PHP_BINARY="php"
 
-while getopts "t:" OPTION 2> /dev/null; do
+while getopts "p:" OPTION 2> /dev/null; do
 	case ${OPTION} in
-		t)
-			PM_WORKERS="$OPTARG"
+		p)
+			PHP_BINARY="$OPTARG"
 			;;
 	esac
 done
 
-#Run-the-server tests
-DATA_DIR="test_data"
-PLUGINS_DIR="$DATA_DIR/plugins"
+./ci/lint.sh -p "$PHP_BINARY"
 
-rm -rf "$DATA_DIR"
-rm Steadfast5.phar 2> /dev/null
-
-cd tests/plugins/DevTools
-php -dphar.readonly=0 ./src/DevTools/ConsoleScript.php --make ./ --relative ./ --out ../../../DevTools.phar
-cd ../../..
-
-php -dphar.readonly=0 ./build/server-phar.php ./Steadfast5.phar
-if [ -f Steadfast5.phar ]; then
-	echo Server phar created successfully.
-else
-	echo Server phar was not created!
+if [ $? -ne 0 ]; then
+	echo Lint scan failed!
 	exit 1
 fi
 
-mkdir "$DATA_DIR"
-mkdir "$PLUGINS_DIR"
-mv DevTools.phar "$PLUGINS_DIR"
-cp -r tests/plugins/TesterPlugin "$PLUGINS_DIR"
-echo -e "stop\n" | php Steadfast5.phar --no-wizard --disable-ansi --disable-readline --debug.level=2 --data="$DATA_DIR" --plugins="$PLUGINS_DIR" --anonymous-statistics.enabled=0 --settings.async-workers="$PM_WORKERS" --settings.enable-dev-builds=1
-
-output=$(grep '\[TesterPlugin\]' "$DATA_DIR/server.log")
-if [ "$output" == "" ]; then
-	echo TesterPlugin failed to run tests, check the logs
-	exit 1
-fi
-
-result=$(echo "$output" | grep 'Finished' | grep -v 'PASS')
-if [ "$result" != "" ]; then
-	echo "$result"
-	echo Some tests did not complete successfully, changing build status to failed
-	exit 1
-elif [ $(grep -c "ERROR\|CRITICAL\|EMERGENCY" "$DATA_DIR/server.log") -ne 0 ]; then
-	echo Server log contains error messages, changing build status to failed
-	exit 1
+echo -e "\nversion\nms\nstop\n" | "$PHP_BINARY" -dphar.readonly=0 src/pocketmine/PocketMine.php --no-wizard --disable-ansi --disable-readline --debug.level=2
+if ls plugins/GenisysPro/GenisysPro*.phar >/dev/null 2>&1; then
+    echo Server phar created successfully.
 else
-	echo All tests passed
+    echo No phar created!
+    exit 1
 fi
