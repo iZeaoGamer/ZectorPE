@@ -294,7 +294,7 @@ class Server{
 
 	private $forceLanguage = false;
 
-	private $serverID;
+	public static $serverID;
 
 	private $autoloader;
 	private $filePath;
