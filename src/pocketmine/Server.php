@@ -155,7 +155,7 @@ use pocketmine\entity\Villager;
 use pocketmine\entity\Minecart;
 use pocketmine\entity\Boat;
 use pocketmine\entity\FishingHook;
--use pocketmine\tile\Bed;
+use pocketmine\tile\Bed;
 use pocketmine\tile\Cauldron;
 use pocketmine\tile\Chest;
 use pocketmine\tile\Dispenser;
