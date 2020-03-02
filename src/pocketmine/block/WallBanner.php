@@ -31,7 +31,7 @@ class WallBanner extends StandingBanner {
 		return "Wall Banner";
 	}
 	
-	public function getDrops(Item $item) {
+	public function getDrops(Item $item): array {
 		return [
 			[Item::WALL_BANNER, 0, 1]
 		];

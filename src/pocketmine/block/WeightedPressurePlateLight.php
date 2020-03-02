@@ -40,7 +40,7 @@ class WeightedPressurePlateLight extends StonePressurePlate{
 		return "Weighted Pressure Plate Light";
 	}
 
-	public function getDrops(Item $item){
+	public function getDrops(Item $item): array{
 		return [
 			[Item::WEIGHTED_PRESSURE_PLATE_LIGHT, 0, 1],
 		];
