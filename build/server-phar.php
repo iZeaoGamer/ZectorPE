@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\build\server_phar;
+namespace pocketmine\build;
 
 use pocketmine\utils\Git;
 use function array_map;
