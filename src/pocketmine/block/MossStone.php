@@ -24,27 +24,46 @@ namespace pocketmine\block;
 use pocketmine\item\Item;
 use pocketmine\item\Tool;
 
-class MossStone extends Solid{
+class MossStone extends Solid {
 
 	protected $id = self::MOSS_STONE;
 
+	/**
+	 * MossStone constructor.
+	 *
+	 * @param int $meta
+	 */
 	public function __construct($meta = 0){
 		$this->meta = $meta;
 	}
 
-	public function getName(){
+	/**
+	 * @return string
+	 */
+	public function getName() : string{
 		return "Moss Stone";
 	}
 
+	/**
+	 * @return int
+	 */
 	public function getHardness(){
 		return 2;
 	}
 
+	/**
+	 * @return int
+	 */
 	public function getToolType(){
 		return Tool::TYPE_PICKAXE;
 	}
 
-	public function getDrops(Item $item){
+	/**
+	 * @param Item $item
+	 *
+	 * @return array
+	 */
+	public function getDrops(Item $item) : array{
 		if($item->isPickaxe() >= 1){
 			return [
 				[Item::MOSS_STONE, $this->meta, 1],

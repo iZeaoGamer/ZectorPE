@@ -24,22 +24,34 @@ namespace pocketmine\block;
 
 use pocketmine\item\Tool;
 
-class HardenedClay extends Solid{
+class HardenedClay extends Solid {
 
 	protected $id = self::HARDENED_CLAY;
 
-	public function __construct(){
-
+	/**
+	 * HardenedClay constructor.
+	 */
+	public function __construct($meta = 0){
+		$this->meta = $meta;
 	}
 
-	public function getName(){
+	/**
+	 * @return string
+	 */
+	public function getName() : string{
 		return "Hardened Clay";
 	}
 
+	/**
+	 * @return int
+	 */
 	public function getToolType(){
 		return Tool::TYPE_PICKAXE;
 	}
 
+	/**
+	 * @return float
+	 */
 	public function getHardness(){
 		return 1.25;
 	}

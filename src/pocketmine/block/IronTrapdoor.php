@@ -1,41 +1,48 @@
 <?php
 
+/*
+ *
+ *  _____   _____   __   _   _   _____  __    __  _____
+ * /  ___| | ____| |  \ | | | | /  ___/ \ \  / / /  ___/
+ * | |     | |__   |   \| | | | | |___   \ \/ /  | |___
+ * | |  _  |  __|  | |\   | | | \___  \   \  /   \___  \
+ * | |_| | | |___  | | \  | | |  ___| |   / /     ___| |
+ * \_____/ |_____| |_|  \_| |_| /_____/  /_/     /_____/
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * @author iTX Technologies
+ * @link https://itxtech.org
+ *
+ */
+
 namespace pocketmine\block;
 
-use pocketmine\item\Item;
-use pocketmine\item\Tool;
-use pocketmine\level\Level;
-use pocketmine\Player;
-
 class IronTrapdoor extends Trapdoor {
-
 	protected $id = self::IRON_TRAPDOOR;
 
-	public function getName() {
+	/**
+	 * @return string
+	 */
+	public function getName() : string{
 		return "Iron Trapdoor";
 	}
 
-	public function getHardness() {
+	/**
+	 * @return int
+	 */
+	public function getHardness(){
 		return 5;
 	}
 
-	public function getToolType() {
-		return Tool::TYPE_PICKAXE;
-	}
-	
-	public function onUpdate($type, $deep) {
-		if (!Block::onUpdate($type, $deep)) {
-			return false;
-		}
-		$deep++;
-		if ($type == Level::BLOCK_UPDATE_NORMAL) {
-			$this->meta ^= 0x08;
-			$this->getLevel()->setBlock($this, $this, true, false, $deep);
-		}
-	}
-	
-	public function onActivate(Item $item, Player $player = null) {
-		return false;
+	/**
+	 * @return int
+	 */
+	public function getResistance(){
+		return 25;
 	}
 
 }

@@ -28,25 +28,44 @@ use pocketmine\math\Vector3 as Vector3;
 use pocketmine\Player;
 use pocketmine\Server;
 
-class Sugarcane extends Flowable{
+class Sugarcane extends Flowable {
 
 	protected $id = self::SUGARCANE_BLOCK;
 
+	/**
+	 * Sugarcane constructor.
+	 *
+	 * @param int $meta
+	 */
 	public function __construct($meta = 0){
 		$this->meta = $meta;
 	}
 
-	public function getName(){
+	/**
+	 * @return string
+	 */
+	public function getName() : string{
 		return "Sugarcane";
 	}
 
 
-	public function getDrops(Item $item){
+	/**
+	 * @param Item $item
+	 *
+	 * @return array
+	 */
+	public function getDrops(Item $item) : array{
 		return [
 			[Item::SUGARCANE, 0, 1],
 		];
 	}
 
+	/**
+	 * @param Item        $item
+	 * @param Player|null $player
+	 *
+	 * @return bool
+	 */
 	public function onActivate(Item $item, Player $player = null){
 		if($item->getId() === Item::DYE and $item->getDamage() === 0x0F){ //Bonemeal
 			if($this->getSide(0)->getId() !== self::SUGARCANE_BLOCK){
@@ -73,11 +92,12 @@ class Sugarcane extends Flowable{
 		return false;
 	}
 
-	public function onUpdate($type, $deep){
-		if (!Block::onUpdate($type, $deep)) {
-			return false;
-		}
-		$deep++;
+	/**
+	 * @param int $type
+	 *
+	 * @return bool|int
+	 */
+	public function onUpdate($type){
 		if($type === Level::BLOCK_UPDATE_NORMAL){
 			$down = $this->getSide(0);
 			if($down->isTransparent() === true and $down->getId() !== self::SUGARCANE_BLOCK){
@@ -91,15 +111,15 @@ class Sugarcane extends Flowable{
 					for($y = 1; $y < 3; ++$y){
 						$b = $this->getLevel()->getBlock(new Vector3($this->x, $this->y + $y, $this->z));
 						if($b->getId() === self::AIR){
-							$this->getLevel()->setBlock($b, new Sugarcane(), true, true, $deep);
+							$this->getLevel()->setBlock($b, new Sugarcane(), true);
 							break;
 						}
 					}
 					$this->meta = 0;
-					$this->getLevel()->setBlock($this, $this, true, true, $deep);
+					$this->getLevel()->setBlock($this, $this, true);
 				}else{
 					++$this->meta;
-					$this->getLevel()->setBlock($this, $this, true, true, $deep);
+					$this->getLevel()->setBlock($this, $this, true);
 				}
 
 				return Level::BLOCK_UPDATE_RANDOM;
@@ -109,6 +129,18 @@ class Sugarcane extends Flowable{
 		return false;
 	}
 
+	/**
+	 * @param Item        $item
+	 * @param Block       $block
+	 * @param Block       $target
+	 * @param int         $face
+	 * @param float       $fx
+	 * @param float       $fy
+	 * @param float       $fz
+	 * @param Player|null $player
+	 *
+	 * @return bool
+	 */
 	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = null){
 		$down = $this->getSide(0);
 		if($down->getId() === self::SUGARCANE_BLOCK){

@@ -26,23 +26,32 @@ use pocketmine\item\Item;
 use pocketmine\level\Level;
 use pocketmine\Server;
 
-class PumpkinStem extends Crops{
+class PumpkinStem extends Crops {
 
 	protected $id = self::PUMPKIN_STEM;
 
+	/**
+	 * PumpkinStem constructor.
+	 *
+	 * @param int $meta
+	 */
 	public function __construct($meta = 0){
 		$this->meta = $meta;
 	}
 
-	public function getName(){
+	/**
+	 * @return string
+	 */
+	public function getName() : string{
 		return "Pumpkin Stem";
 	}
 
-	public function onUpdate($type, $deep){
-		if (!Block::onUpdate($type, $deep)) {
-			return false;
-		}
-		$deep++;
+	/**
+	 * @param int $type
+	 *
+	 * @return bool|int
+	 */
+	public function onUpdate($type){
 		if($type === Level::BLOCK_UPDATE_NORMAL){
 			if($this->getSide(0)->isTransparent()){
 				$this->getLevel()->useBreakOn($this);
@@ -55,7 +64,7 @@ class PumpkinStem extends Crops{
 					++$block->meta;
 					Server::getInstance()->getPluginManager()->callEvent($ev = new BlockGrowEvent($this, $block));
 					if(!$ev->isCancelled()){
-						$this->getLevel()->setBlock($this, $ev->getNewState(), true, true, $deep);
+						$this->getLevel()->setBlock($this, $ev->getNewState(), true);
 					}
 
 					return Level::BLOCK_UPDATE_RANDOM;
@@ -71,7 +80,7 @@ class PumpkinStem extends Crops{
 					if($side->getId() === self::AIR and ($d->getId() === self::FARMLAND or $d->getId() === self::GRASS or $d->getId() === self::DIRT)){
 						Server::getInstance()->getPluginManager()->callEvent($ev = new BlockGrowEvent($side, new Pumpkin()));
 						if(!$ev->isCancelled()){
-							$this->getLevel()->setBlock($side, $ev->getNewState(), true, true, $deep);
+							$this->getLevel()->setBlock($side, $ev->getNewState(), true);
 						}
 					}
 				}
@@ -83,7 +92,12 @@ class PumpkinStem extends Crops{
 		return false;
 	}
 
-	public function getDrops(Item $item){
+	/**
+	 * @param Item $item
+	 *
+	 * @return array
+	 */
+	public function getDrops(Item $item) : array{
 		return [
 			[Item::PUMPKIN_SEEDS, 0, mt_rand(0, 2)],
 		];

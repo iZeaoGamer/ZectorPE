@@ -25,7 +25,7 @@ use pocketmine\item\Item;
 use pocketmine\item\Tool;
 use pocketmine\Player;
 
-class Wood extends Solid{
+class Wood extends Solid {
 	const OAK = 0;
 	const SPRUCE = 1;
 	const BIRCH = 2;
@@ -35,15 +35,26 @@ class Wood extends Solid{
 
 	protected $id = self::WOOD;
 
+	/**
+	 * Wood constructor.
+	 *
+	 * @param int $meta
+	 */
 	public function __construct($meta = 0){
 		$this->meta = $meta;
 	}
 
+	/**
+	 * @return int
+	 */
 	public function getHardness(){
 		return 2;
 	}
 
-	public function getName(){
+	/**
+	 * @return string
+	 */
+	public function getName() : string{
 		static $names = [
 			self::OAK => "Oak Wood",
 			self::SPRUCE => "Spruce Wood",
@@ -53,6 +64,32 @@ class Wood extends Solid{
 		return $names[$this->meta & 0x03];
 	}
 
+	/**
+	 * @return int
+	 */
+	public function getBurnChance() : int{
+		return 5;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getBurnAbility() : int{
+		return 10;
+	}
+
+	/**
+	 * @param Item        $item
+	 * @param Block       $block
+	 * @param Block       $target
+	 * @param int         $face
+	 * @param float       $fx
+	 * @param float       $fy
+	 * @param float       $fz
+	 * @param Player|null $player
+	 *
+	 * @return bool
+	 */
 	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = null){
 		$faces = [
 			0 => 0,
@@ -69,12 +106,20 @@ class Wood extends Solid{
 		return true;
 	}
 
-	public function getDrops(Item $item){
+	/**
+	 * @param Item $item
+	 *
+	 * @return array
+	 */
+	public function getDrops(Item $item) : array{
 		return [
 			[$this->id, $this->meta & 0x03, 1],
 		];
 	}
 
+	/**
+	 * @return int
+	 */
 	public function getToolType(){
 		return Tool::TYPE_AXE;
 	}

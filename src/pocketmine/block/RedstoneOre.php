@@ -17,10 +17,11 @@
  * @link http://www.pocketmine.net/
  * 
  *
- */
+*/
 
 namespace pocketmine\block;
 
+use pocketmine\item\enchantment\Enchantment;
 use pocketmine\item\Item;
 use pocketmine\item\Tool;
 use pocketmine\level\Level;
@@ -29,25 +30,35 @@ class RedstoneOre extends Solid {
 
 	protected $id = self::REDSTONE_ORE;
 
-	public function __construct() {
-		
+	/**
+	 * RedstoneOre constructor.
+	 */
+	public function __construct($meta = 0){
+		$this->meta = $meta;
 	}
 
-	public function getName() {
+	/**
+	 * @return string
+	 */
+	public function getName() : string{
 		return "Redstone Ore";
 	}
 
-	public function getHardness() {
+	/**
+	 * @return int
+	 */
+	public function getHardness(){
 		return 3;
 	}
 
-	public function onUpdate($type, $deep) {
-		if (!Block::onUpdate($type, $deep)) {
-			return false;
-		}
-		$deep++;
-		if ($type === Level::BLOCK_UPDATE_NORMAL or $type === Level::BLOCK_UPDATE_TOUCH) {
-			$this->getLevel()->setBlock($this, Block::get(Item::GLOWING_REDSTONE_ORE, $this->meta), false, false, $deep);
+	/**
+	 * @param int $type
+	 *
+	 * @return bool|int
+	 */
+	public function onUpdate($type){
+		if($type === Level::BLOCK_UPDATE_NORMAL or $type === Level::BLOCK_UPDATE_TOUCH){
+			$this->getLevel()->setBlock($this, Block::get(Item::GLOWING_REDSTONE_ORE, $this->meta));
 
 			return Level::BLOCK_UPDATE_WEAK;
 		}
@@ -55,18 +66,33 @@ class RedstoneOre extends Solid {
 		return false;
 	}
 
-	public function getToolType() {
+	/**
+	 * @return int
+	 */
+	public function getToolType(){
 		return Tool::TYPE_PICKAXE;
 	}
 
-	public function getDrops(Item $item) {
-		if ($item->isPickaxe() >= 4) {
-			return [
-				[Item::REDSTONE_DUST, 0, mt_rand(4, 5)],
-			];
-		} else {
+	/**
+	 * @param Item $item
+	 *
+	 * @return array
+	 */
+	public function getDrops(Item $item) : array{
+		if($item->isPickaxe() >= Tool::TIER_IRON){
+			if($item->getEnchantmentLevel(Enchantment::TYPE_MINING_SILK_TOUCH) > 0){
+				return [
+					[Item::REDSTONE_ORE, 0, 1],
+				];
+			}else{
+				$fortuneL = $item->getEnchantmentLevel(Enchantment::TYPE_MINING_FORTUNE);
+				$fortuneL = $fortuneL > 3 ? 3 : $fortuneL;
+				return [
+					[Item::REDSTONE_DUST, 0, mt_rand(4, 5 + $fortuneL)],
+				];
+			}
+		}else{
 			return [];
 		}
 	}
-
 }

@@ -23,55 +23,86 @@ namespace pocketmine\block;
 
 
 use pocketmine\item\Item;
-
 use pocketmine\level\Level;
 use pocketmine\math\AxisAlignedBB;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
 
-class WaterLily extends Flowable{
+class WaterLily extends Flowable {
 
 	protected $id = self::WATER_LILY;
 
+	/**
+	 * WaterLily constructor.
+	 *
+	 * @param int $meta
+	 */
 	public function __construct($meta = 0){
 		$this->meta = $meta;
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function isSolid(){
 		return false;
 	}
 
-	public function getName(){
+	/**
+	 * @return string
+	 */
+	public function getName() : string{
 		return "Lily Pad";
 	}
 
+	/**
+	 * @return int
+	 */
 	public function getHardness(){
-		return 0.6;
+		return 0;
 	}
 
+	/**
+	 * @return int
+	 */
+	public function getResistance(){
+		return 0;
+	}
+
+	/**
+	 * @return bool
+	 */
 	public function canPassThrough(){
 		return true;
 	}
-	
-	public function getBoundingBox(){
-		if($this->boundingBox === null){
-			$this->boundingBox = $this->recalculateBoundingBox();
-		}
-		return $this->boundingBox;
-	}
 
+	/**
+	 * @return AxisAlignedBB
+	 */
 	protected function recalculateBoundingBox(){
 		return new AxisAlignedBB(
 			$this->x,
 			$this->y,
 			$this->z,
-			$this->x + 1,
-			$this->y + 1,
-			$this->z + 1
+			$this->x,
+			$this->y + 0.0625,
+			$this->z
 		);
 	}
 
 
+	/**
+	 * @param Item        $item
+	 * @param Block       $block
+	 * @param Block       $target
+	 * @param int         $face
+	 * @param float       $fx
+	 * @param float       $fy
+	 * @param float       $fz
+	 * @param Player|null $player
+	 *
+	 * @return bool
+	 */
 	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = null){
 		if($target instanceof Water){
 			$up = $target->getSide(Vector3::SIDE_UP);
@@ -84,10 +115,12 @@ class WaterLily extends Flowable{
 		return false;
 	}
 
-	public function onUpdate($type, $deep){
-		if (!Block::onUpdate($type, $deep)) {
-			return false;
-		}
+	/**
+	 * @param int $type
+	 *
+	 * @return bool|int
+	 */
+	public function onUpdate($type){
 		if($type === Level::BLOCK_UPDATE_NORMAL){
 			if(!($this->getSide(0) instanceof Water)){
 				$this->getLevel()->useBreakOn($this);
@@ -98,7 +131,12 @@ class WaterLily extends Flowable{
 		return false;
 	}
 
-	public function getDrops(Item $item){
+	/**
+	 * @param Item $item
+	 *
+	 * @return array
+	 */
+	public function getDrops(Item $item) : array{
 		return [
 			[$this->id, 0, 1]
 		];

@@ -21,11 +21,25 @@
 
 namespace pocketmine\block;
 
-class StillLava extends Lava{
+use pocketmine\level\Level;
+
+class StillLava extends Lava {
 
 	protected $id = self::STILL_LAVA;
 
-	public function getName(){
+	/**
+	 * @param int $type
+	 */
+	public function onUpdate($type){
+		if($type == Level::BLOCK_UPDATE_NORMAL){
+			parent::onUpdate($type);
+		}
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getName() : string{
 		return "Still Lava";
 	}
 

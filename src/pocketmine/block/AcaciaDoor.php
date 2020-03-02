@@ -24,11 +24,13 @@ namespace pocketmine\block;
 use pocketmine\item\Item;
 use pocketmine\item\Tool;
 
-class AcaciaDoor extends Door{
+class AcaciaDoor extends Door {
 
 	protected $id = self::ACACIA_DOOR_BLOCK;
 
 	/**
+	 * AcaciaDoor constructor.
+	 *
 	 * @param int $meta
 	 */
 	public function __construct($meta = 0){
@@ -38,19 +40,19 @@ class AcaciaDoor extends Door{
 	/**
 	 * @return string
 	 */
-	public function getName(){
+	public function getName() : string{
 		return "Acacia Door Block";
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function canBeActivated(){
+	public function canBeActivated() : bool{
 		return true;
 	}
 
 	/**
-	 * @ return int
+	 * @return int
 	 */
 	public function getHardness(){
 		return 3;
@@ -65,8 +67,10 @@ class AcaciaDoor extends Door{
 
 	/**
 	 * @param Item $item
+	 *
+	 * @return array
 	 */
-	public function getDrops(Item $item){
+	public function getDrops(Item $item) : array{
 		return [
 			[Item::ACACIA_DOOR, 0, 1],
 		];

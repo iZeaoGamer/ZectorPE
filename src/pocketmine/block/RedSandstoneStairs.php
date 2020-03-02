@@ -1,25 +1,34 @@
 <?php
 
+/*
+ *
+ *  _____   _____   __   _   _   _____  __    __  _____
+ * /  ___| | ____| |  \ | | | | /  ___/ \ \  / / /  ___/
+ * | |     | |__   |   \| | | | | |___   \ \/ /  | |___
+ * | |  _  |  __|  | |\   | | | \___  \   \  /   \___  \
+ * | |_| | | |___  | | \  | | |  ___| |   / /     ___| |
+ * \_____/ |_____| |_|  \_| |_| /_____/  /_/     /_____/
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * @author iTX Technologies
+ * @link https://itxtech.org
+ *
+ */
+
 namespace pocketmine\block;
 
-use pocketmine\item\Item;
-
 class RedSandstoneStairs extends SandstoneStairs {
-	
-	protected $id = self::RED_SANDSTONE_STAIRS;
-	
-	public function getName(){
+
+	protected $id = Block::RED_SANDSTONE_STAIRS;
+
+	/**
+	 * @return string
+	 */
+	public function getName() : string{
 		return "Red Sandstone Stairs";
 	}
-	
-	public function getDrops(Item $item){
-		if($item->isPickaxe() >= 1){
-			return [
-				[Item::RED_SANDSTONE_STAIRS, $this->meta & 0x03, 1],
-			];
-		}else{
-			return [];
-		}
-	}
-	
 }

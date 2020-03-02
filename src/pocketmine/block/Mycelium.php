@@ -22,43 +22,67 @@
 namespace pocketmine\block;
 
 use pocketmine\event\block\BlockSpreadEvent;
+use pocketmine\item\enchantment\Enchantment;
 use pocketmine\item\Item;
 use pocketmine\item\Tool;
 use pocketmine\level\Level;
 use pocketmine\math\Vector3;
 use pocketmine\Server;
 
-class Mycelium extends Solid{
+
+class Mycelium extends Solid {
 
 	protected $id = self::MYCELIUM;
 
-	public function __construct(){
-
+	/**
+	 * Mycelium constructor.
+	 */
+	public function __construct($meta = 0){
+		$this->meta = $meta;
 	}
 
-	public function getName(){
+	/**
+	 * @return string
+	 */
+	public function getName() : string{
 		return "Mycelium";
 	}
 
+	/**
+	 * @return int
+	 */
 	public function getToolType(){
 		return Tool::TYPE_SHOVEL;
 	}
 
+	/**
+	 * @return float
+	 */
 	public function getHardness(){
 		return 0.6;
 	}
 
-	public function getDrops(Item $item){
-		return [
-			[Item::DIRT, 0, 1],
-		];
+	/**
+	 * @param Item $item
+	 *
+	 * @return array
+	 */
+	public function getDrops(Item $item) : array{
+		if($item->getEnchantmentLevel(Enchantment::TYPE_MINING_SILK_TOUCH) > 0){
+			return [
+				[Item::MYCELIUM, 0, 1],
+			];
+		}else{
+			return [
+				[Item::DIRT, 0, 1],
+			];
+		}
 	}
 
-	public function onUpdate($type, $deep){
-		if (!Block::onUpdate($type, $deep)) {
-			return false;
-		}
-		$deep++;
+	/**
+	 * @param int $type
+	 */
+	public function onUpdate($type){
 		if($type === Level::BLOCK_UPDATE_RANDOM){
 			//TODO: light levels
 			$x = mt_rand($this->x - 1, $this->x + 1);
@@ -69,7 +93,7 @@ class Mycelium extends Solid{
 				if($block->getSide(1) instanceof Transparent){
 					Server::getInstance()->getPluginManager()->callEvent($ev = new BlockSpreadEvent($block, $this, new Mycelium()));
 					if(!$ev->isCancelled()){
-						$this->getLevel()->setBlock($block, $ev->getNewState(), false, true, $deep);
+						$this->getLevel()->setBlock($block, $ev->getNewState());
 					}
 				}
 			}
