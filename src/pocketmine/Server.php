@@ -68,11 +68,10 @@ use pocketmine\level\format\LevelProviderManager;
 use pocketmine\level\format\mcregion\McRegion;
 use pocketmine\level\generator\Generator;
 use pocketmine\level\generator\ender\Ender;
-use pocketmine\level\generator\nether\Nether;
+use pocketmine\level\generator\hell\Nether;
 use pocketmine\level\generator\VoidGenerator;
 use pocketmine\level\generator\normal\Normal;
 use pocketmine\level\generator\normal\Normal2;
-use pocketmine\level\generator\hell\Nether as HellNether;
 use pocketmine\level\generator\Flat;
 use pocketmine\level\Level;
 use pocketmine\metadata\EntityMetadataStore;
@@ -1970,8 +1969,6 @@ class Server{
 
 			Generator::addGenerator(Flat::class, "flat");
 			Generator::addGenerator(Normal::class, "normal");
-			Generator::addGenerator(Normal::class, "default");
-			Generator::addGenerator(HellNether::class, "hell");
 			Generator::addGenerator(Nether::class, "nether");
 			Generator::addGenerator(VoidGenerator::class, "void");
 			Generator::addGenerator(Normal2::class, "normal2");
