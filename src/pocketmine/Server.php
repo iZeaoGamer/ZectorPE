@@ -294,7 +294,7 @@ class Server{
 
 	private $forceLanguage = false;
 
-	public static $serverID;
+	private $serverID;
 
 	private $autoloader;
 	private $filePath;
@@ -377,10 +377,11 @@ class Server{
 	public $enderName = "ender";
 	public $enderLevel = null;
 	public $absorbWater = false;
+	public static $sid;
 	
 		
 	public static function getServerId(){
-		return self::$serverId;
+		return self::$sid;
 	}
 
 	/**
