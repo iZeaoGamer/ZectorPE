@@ -1582,7 +1582,7 @@ class Server{
 	}
 
 	public function about(){
-	 $version = implode(",",ProtocolInfo::ACCEPTED_PROTOCOLS);
+	 $version = implode(",",ProtocolInfo::MINECRAFT_VERSION);
 		$string = "
   _____            _               _____
  / ____|          (_)             |  __ \
