@@ -138,7 +138,6 @@ function main() : void{
 			'src',
 			'vendor'
 		],
-		],
 		<<<'STUB'
 <?php
 $tmpDir = sys_get_temp_dir();
