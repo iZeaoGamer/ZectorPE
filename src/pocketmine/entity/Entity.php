@@ -86,6 +86,8 @@ use pocketmine\entity\monster\walking\Wolf;
 use pocketmine\entity\monster\walking\Zombie;
 use pocketmine\entity\monster\walking\ZombieVillager;
 use pocketmine\entity\Item as DroppedItem;
+use pocketmine\entity\projectile\FireBall;
+use pocketmine\entity\projectile\BottleOEnchanting;
 use pocketmine\entity\projectile\SplashPotion;
 
 abstract class Entity extends Location implements Metadatable{
