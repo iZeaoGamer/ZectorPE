@@ -21,7 +21,7 @@
 
 namespace pocketmine\level\generator;
 
-use pocketmine\level\format\Chunk;
+use pocketmine\level\format\FullChunk;
 use pocketmine\level\Level;
 use pocketmine\level\SimpleChunkManager;
 use pocketmine\scheduler\AsyncTask;
@@ -40,7 +40,7 @@ class GenerationTask extends AsyncTask {
 	 * @param Level $level
 	 * @param Chunk $chunk
 	 */
-	public function __construct(Level $level, Chunk $chunk){
+	public function __construct(Level $level, FullChunk $chunk){
 		$this->state = true;
 		$this->levelId = $level->getId();
 		$this->chunk = $chunk->fastSerialize();
