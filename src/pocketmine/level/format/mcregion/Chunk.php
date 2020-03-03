@@ -213,6 +213,101 @@ class Chunk extends BaseFullChunk{
 		$this->data = substr_replace($this->data, $column, ($x << 10) + ($z << 6), 64);
 		return true;
 	}
+	/**
+     * Serializes the chunk for sending to players
+     *
+     * @return string
+     */
+    public function networkSerialize() : string{
+        $result = "";
+        $subChunkCount = $this->getSubChunkSendCount();
+        $result .= chr($subChunkCount);
+        for($y = 0; $y < $subChunkCount; ++$y){
+            $result .= $this->subChunks[$y]->networkSerialize();
+        }
+        $result .= pack("v*", ...$this->heightMap)
+            .  $this->biomeIds
+            .  chr(0); //border block array count
+        //Border block entry format: 1 byte (4 bits X, 4 bits Z). These are however useless since they crash the regular client.
+
+        $extraData = new BinaryStream();
+        $extraData->putVarInt(count($this->extraData)); //WHY, Mojang, WHY
+        foreach($this->extraData as $key => $value){
+            $extraData->putVarInt($key);
+            $extraData->putLShort($value);
+        }
+        $result .= $extraData->getBuffer();
+
+        if(count($this->tiles) > 0){
+            $nbt = new NBT(NBT::LITTLE_ENDIAN);
+            $list = [];
+            foreach($this->tiles as $tile){
+                if($tile instanceof Spawnable){
+                    $list[] = $tile->getSpawnCompound();
+                }
+            }
+            $nbt->setData($list);
+            $result .= $nbt->write(true);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Fast-serializes the chunk for passing between threads
+     * TODO: tiles and entities
+     *
+     * @return string
+     */
+    public function fastSerialize() : string{
+        $stream = new BinaryStream();
+        $stream->putInt($this->x);
+        $stream->putInt($this->z);
+        $count = 0;
+        $subChunks = "";
+        foreach($this->subChunks as $y => $subChunk){
+            if($subChunk instanceof EmptySubChunk){
+                continue;
+            }
+            ++$count;
+            $subChunks .= chr($y) . $subChunk->fastSerialize();
+        }
+        $stream->putByte($count);
+        $stream->put($subChunks);
+        $stream->put(pack("v*", ...$this->heightMap) .
+            $this->biomeIds .
+            chr(($this->lightPopulated ? 4 : 0) | ($this->terrainPopulated ? 2 : 0) | ($this->terrainGenerated ? 1 : 0)));
+        return $stream->getBuffer();
+    }
+
+    /**
+     * Deserializes a fast-serialized chunk
+     *
+     * @param string $data
+     *
+     * @return Chunk
+     */
+    public static function fastDeserialize(string $data){
+        $stream = new BinaryStream();
+        $stream->setBuffer($data);
+        $data = null;
+        $x = $stream->getInt();
+        $z = $stream->getInt();
+        $subChunks = [];
+        $count = $stream->getByte();
+        for($y = 0; $y < $count; ++$y){
+            $subChunks[$stream->getByte()] = SubChunk::fastDeserialize($stream->get(10240));
+        }
+        $heightMap = array_values(unpack("v*", $stream->get(512)));
+        $biomeIds = $stream->get(256);
+
+        $chunk = new Chunk($x, $z, $subChunks, [], [], $biomeIds, $heightMap);
+        $flags = $stream->getByte();
+        $chunk->lightPopulated = (bool) ($flags & 4);
+        $chunk->terrainPopulated = (bool) ($flags & 2);
+        $chunk->terrainGenerated = (bool) ($flags & 1);
+        return $chunk;
+    }
 
 	/**
 	 * @return bool
