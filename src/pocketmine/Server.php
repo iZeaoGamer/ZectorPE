@@ -68,6 +68,12 @@ use pocketmine\level\format\pmanvil\PMAnvil;
 use pocketmine\level\format\LevelProviderManager;
 use pocketmine\level\format\mcregion\McRegion;
 use pocketmine\level\generator\Generator;
+use pocketmine\level\generator\ender\Ender;
+use pocketmine\level\generator\hell\Nether;
+use pocketmine\level\generator\VoidGenerator;
+use pocketmine\level\generator\normal\Normal;
+use pocketmine\level\generator\normal\Normal2;
+use pocketmine\level\generator\Flat;
 use pocketmine\level\Level;
 use pocketmine\metadata\EntityMetadataStore;
 use pocketmine\metadata\LevelMetadataStore;
@@ -325,7 +331,6 @@ class Server{
 	public function removeSpawnedEntity($entity) {
 		unset($this->spawnedEntity[$entity->getId()]);
 	}
-
 	public function isUseAnimal() {
 		return $this->useAnimal;
 	}
@@ -337,7 +342,6 @@ class Server{
 	public function isUseMonster() {
 		return $this->useMonster;
 	}
-
 	public function getMonsterLimit() {
 		return $this->monsterLimit;
 	}
@@ -1727,13 +1731,28 @@ class Server{
 				$this->generateLevel($name, $seed, $options);
 			}
 		}
-
 		if($this->getDefaultLevel() === null){
 			$default = $this->getConfigString("level-name", "world");
 			if(trim($default) == ""){
 				$this->getLogger()->warning("level-name cannot be null, using default");
 				$default = "world";
 				$this->setConfigString("level-name", "world");
+
+			foreach((array) $this->getProperty("worlds", []) as $name => $worldSetting){
+				if($this->loadLevel($name) === false){
+					$seed = $this->getProperty("worlds.$name.seed", time());
+					$options = explode(":", $this->getProperty("worlds.$name.generator", Generator::getGenerator("default")));
+					$generator = Generator::getGenerator(array_shift($options));
+					if(count($options) > 0){
+						$options = [
+							"preset" => implode(":", $options),
+						];
+					}else{
+						$options = [];
+					}
+
+					$this->generateLevel($name, $seed, $generator, $options);
+				}
 			}
 			if($this->loadLevel($default) === false){
 				$seed = $this->getConfigInt("level-seed", time());
@@ -2598,7 +2617,6 @@ class Server{
 //		}
 		return true;
 	}
-
 	private function registerEntities(){
 		Entity::registerEntity(Minecart::class);
 		Entity::registerEntity(Boat::class);
