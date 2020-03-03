@@ -1737,22 +1737,6 @@ class Server{
 				$this->getLogger()->warning("level-name cannot be null, using default");
 				$default = "world";
 				$this->setConfigString("level-name", "world");
-
-			foreach((array) $this->getProperty("worlds", []) as $name => $worldSetting){
-				if($this->loadLevel($name) === false){
-					$seed = $this->getProperty("worlds.$name.seed", time());
-					$options = explode(":", $this->getProperty("worlds.$name.generator", Generator::getGenerator("default")));
-					$generator = Generator::getGenerator(array_shift($options));
-					if(count($options) > 0){
-						$options = [
-							"preset" => implode(":", $options),
-						];
-					}else{
-						$options = [];
-					}
-
-					$this->generateLevel($name, $seed, $generator, $options);
-				}
 			}
 			if($this->loadLevel($default) === false){
 				$seed = $this->getConfigInt("level-seed", time());
