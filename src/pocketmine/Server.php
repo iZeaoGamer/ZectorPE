@@ -1501,14 +1501,6 @@ class Server{
 		self::$sleeper = new \Threaded;
 		$this->logger = $logger;
 		$this->filePath = $filePath;
-		if(!$this->loadLevel("nether")){
-			$this->generateLevel("nether", time(), Generator::getGenerator("nether"));
-		}
-		$this->netherLevel = $this->getLevelByName("nether");
-		if(!$this->loadLevel("ender")){
-			$this->generateLevel("ender", time(), Generator::getGenerator("ender"));
-		}
-		$this->enderLevel = $this->getLevelByName("ender");
 		if(!file_exists($dataPath . "worlds/")){
 			mkdir($dataPath . "worlds/", 0777);
 		}
@@ -1704,11 +1696,10 @@ class Server{
 		LevelProviderManager::addProvider($this, Anvil::class);
 		LevelProviderManager::addProvider($this, PMAnvil::class);
 		LevelProviderManager::addProvider($this, McRegion::class);
-		Generator::addGenerator($this, Nether::class, "hell");
-			Generator::addGenerator($this, Nether::class, "nether");
-			Generator::addGenerator($this, VoidGenerator::class, "void");
-			Generator::addGenerator($this, Normal2::class, "normal2");
-			Generator::addGenerator($this, Ender::class, "ender");
+		Generator::addGenerator($this, Nether::class);
+			Generator::addGenerator($this, VoidGenerator::class);
+			Generator::addGenerator($this, Normal2::class);
+			Generator::addGenerator($this, Ender::class);
 		
 		foreach((array) $this->getProperty("worlds", []) as $name => $worldSetting){
 			if($this->loadLevel($name) === false){
