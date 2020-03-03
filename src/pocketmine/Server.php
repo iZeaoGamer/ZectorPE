@@ -1693,13 +1693,13 @@ class Server{
 
 		$this->enablePlugins(PluginLoadOrder::STARTUP);
 
-		LevelProviderManager::addProvider($this, Anvil::class);
-		LevelProviderManager::addProvider($this, PMAnvil::class);
-		LevelProviderManager::addProvider($this, McRegion::class);
-		Generator::addGenerator($this, Nether::class);
-			Generator::addGenerator($this, VoidGenerator::class);
-			Generator::addGenerator($this, Normal2::class);
-			Generator::addGenerator($this, Ender::class);
+		LevelProviderManager::addProvider(Anvil::class);
+		LevelProviderManager::addProvider(PMAnvil::class);
+		LevelProviderManager::addProvider(McRegion::class);
+		Generator::addGenerator(Nether::class, "nether");
+			Generator::addGenerator(VoidGenerator::class, "void");
+			Generator::addGenerator(Normal2::class, "normal2");
+			Generator::addGenerator(Ender::class, "ender");
 		
 		foreach((array) $this->getProperty("worlds", []) as $name => $worldSetting){
 			if($this->loadLevel($name) === false){
