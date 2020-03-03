@@ -32,12 +32,18 @@ class SimpleChunkManager implements ChunkManager{
 	protected $yMask;
 	protected $maxY;
 
-	public function __construct($seed, $yMask, $maxY){
+	public function __construct($seed, $yMask, $maxY, $waterHeight = 0){
 		$this->seed = $seed;
 		$this->yMask = $yMask;
 		$this->maxY = $maxY;
+		$this->waterHeight = $waterHeight;
 	}
-
+	/**
+	 * @return int
+	 */
+	public function getWaterHeight() : int{
+		return $this->waterHeight;
+	}
 	/**
 	 * Gets the raw block id.
 	 *
