@@ -167,12 +167,6 @@ use pocketmine\event\server\SendRecipiesList;
 use pocketmine\network\protocol\PEPacket;
 use pocketmine\tile\Beacon;
 use pocketmine\tile\Banner;
-use pocketmine\level\generator\Flat;
-use pocketmine\level\generator\hell\Nether;
-use pocketmine\level\generator\normal\Normal;
-use pocketmine\level\generator\normal\Normal2;
-use pocketmine\level\generator\VoidGenerator;
-use pocketmine\level\generator\ender\Ender;
 
 /**
  * The class that manages everything
