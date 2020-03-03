@@ -39,6 +39,42 @@ class Chunk extends BaseFullChunk{
 
 	/** @var Compound */
 	protected $nbt;
+	const MAX_SUBCHUNKS = 16;
+
+    protected $x;
+    protected $z;
+
+    protected $hasChanged = false;
+
+    protected $isInit = false;
+
+    protected $lightPopulated = false;
+    protected $terrainGenerated = false;
+    protected $terrainPopulated = false;
+
+    protected $height = Chunk::MAX_SUBCHUNKS;
+
+    /** @var SubChunk[] */
+    protected $subChunks = [];
+
+    /** @var EmptySubChunk */
+    protected $emptySubChunk = null;
+
+    /** @var Tile[] */
+    protected $tiles = [];
+    protected $tileList = [];
+
+    /** @var Entity[] */
+    protected $entities = [];
+
+    /** @var int[256] */
+    protected $heightMap = [];
+
+    /** @var string */
+    protected $biomeIds;
+
+    protected $extraData = [];
+
 
 	public function __construct($level, Compound $nbt = null){
 		if($nbt === null){

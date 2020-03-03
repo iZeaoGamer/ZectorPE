@@ -90,7 +90,7 @@ class Chunk implements FullChunk{
      * @param string        $biomeIds
      * @param int[]         $heightMap
      */
-    public function __construct(int $chunkX, int $chunkZ, array $subChunks = [], array $entities = [], array $tiles = [], string $biomeIds = "", array $heightMap = []){
+    public function __construct($chunkX, $chunkZ, $subChunks = [], $entities = [], $tiles = [], $biomeIds = "", $heightMap = []){
         $this->x = $chunkX;
         $this->z = $chunkZ;
 
