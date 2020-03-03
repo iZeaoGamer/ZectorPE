@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\level;
 
-use pocketmine\level\format\Chunk;
+use pocketmine\level\format\FullChunk;
 
 interface ChunkManager {
 	/**
@@ -111,7 +111,7 @@ interface ChunkManager {
 	 * @param int   $chunkZ
 	 * @param Chunk $chunk
 	 */
-	public function setChunk($chunkX, $chunkZ, Chunk $chunk = null);
+	public function setChunk($chunkX, $chunkZ, FullChunk $chunk = null);
 
 	/**
 	 * Gets the level seed
