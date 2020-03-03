@@ -27,51 +27,31 @@ use pocketmine\level\sound\DoorSound;
 use pocketmine\math\AxisAlignedBB;
 use pocketmine\Player;
 
-class FenceGate extends Transparent implements ElectricalAppliance {
+class FenceGate extends Transparent{
 
 	protected $id = self::FENCE_GATE;
 
-	/**
-	 * FenceGate constructor.
-	 *
-	 * @param int $meta
-	 */
 	public function __construct($meta = 0){
 		$this->meta = $meta;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getName() : string{
+	public function getName(){
 		return "Oak Fence Gate";
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getHardness(){
 		return 2;
 	}
 
-	/**
-	 * @return bool
-	 */
-	public function canBeActivated() : bool{
+	public function canBeActivated(){
 		return true;
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getToolType(){
 		return Tool::TYPE_AXE;
 	}
 
 
-	/**
-	 * @return null|AxisAlignedBB
-	 */
 	protected function recalculateBoundingBox(){
 
 		if(($this->getDamage() & 0x04) > 0){
@@ -79,7 +59,7 @@ class FenceGate extends Transparent implements ElectricalAppliance {
 		}
 
 		$i = ($this->getDamage() & 0x03);
-		if($i === 2 or $i === 0){
+		if($i === 2 and $i === 0){
 			return new AxisAlignedBB(
 				$this->x,
 				$this->y,
@@ -100,56 +80,30 @@ class FenceGate extends Transparent implements ElectricalAppliance {
 		}
 	}
 
-	/**
-	 * @param Item        $item
-	 * @param Block       $block
-	 * @param Block       $target
-	 * @param int         $face
-	 * @param float       $fx
-	 * @param float       $fy
-	 * @param float       $fz
-	 * @param Player|null $player
-	 *
-	 * @return bool
-	 */
 	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = null){
-		$this->meta = ($player instanceof Player ? ($player->getDirection() - 1) & 0x03 : 0);
+		$faces = [
+			0 => 3,
+			1 => 0,
+			2 => 1,
+			3 => 2,
+		];
+		$this->meta = $faces[$player instanceof Player ? $player->getDirection() : 0] & 0x03;
 		$this->getLevel()->setBlock($block, $this, true, true);
 
 		return true;
 	}
 
-	/**
-	 * @return bool
-	 */
-	public function isOpened(){
-		return (($this->getDamage() & 0x04) > 0);
-	}
-
-	/**
-	 * @param Item $item
-	 *
-	 * @return array
-	 */
-	public function getDrops(Item $item) : array{
+	public function getDrops(Item $item){
 		return [
 			[$this->id, 0, 1],
 		];
 	}
 
-	/**
-	 * @param Item        $item
-	 * @param Player|null $player
-	 *
-	 * @return bool
-	 */
 	public function onActivate(Item $item, Player $player = null){
 		$this->meta = (($this->meta ^ 0x04) & ~0x02);
-
-		if($player !== null){
+		if ($player !== null) {
 			$this->meta |= (($player->getDirection() - 1) & 0x02);
 		}
-
 		$this->getLevel()->setBlock($this, $this, true);
 		$this->level->addSound(new DoorSound($this));
 		return true;

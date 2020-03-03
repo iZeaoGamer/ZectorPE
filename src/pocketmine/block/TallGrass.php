@@ -22,37 +22,22 @@
 namespace pocketmine\block;
 
 use pocketmine\item\Item;
-use pocketmine\item\Tool;
 use pocketmine\level\Level;
 use pocketmine\Player;
 
-class TallGrass extends Flowable {
-
-	const NORMAL = 1;
-	const FERN = 2;
+class TallGrass extends Flowable{
 
 	protected $id = self::TALL_GRASS;
 
-	/**
-	 * TallGrass constructor.
-	 *
-	 * @param int $meta
-	 */
 	public function __construct($meta = 1){
 		$this->meta = $meta;
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function canBeReplaced(){
 		return true;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getName() : string{
+	public function getName(){
 		static $names = [
 			0 => "Dead Shrub",
 			1 => "Tall Grass",
@@ -61,33 +46,7 @@ class TallGrass extends Flowable {
 		];
 		return $names[$this->meta & 0x03];
 	}
-
-	/**
-	 * @return int
-	 */
-	public function getBurnChance() : int{
-		return 60;
-	}
-
-	/**
-	 * @return int
-	 */
-	public function getBurnAbility() : int{
-		return 100;
-	}
-
-	/**
-	 * @param Item        $item
-	 * @param Block       $block
-	 * @param Block       $target
-	 * @param int         $face
-	 * @param float       $fx
-	 * @param float       $fy
-	 * @param float       $fz
-	 * @param Player|null $player
-	 *
-	 * @return bool
-	 */
+	
 	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = null){
 		$down = $this->getSide(0);
 		if($down->getId() === self::GRASS){
@@ -100,15 +59,14 @@ class TallGrass extends Flowable {
 	}
 
 
-	/**
-	 * @param int $type
-	 *
-	 * @return bool|int
-	 */
-	public function onUpdate($type){
+	public function onUpdate($type, $deep){
+		if (!Block::onUpdate($type, $deep)) {
+			return false;
+		}
+		$deep++;
 		if($type === Level::BLOCK_UPDATE_NORMAL){
 			if($this->getSide(0)->isTransparent() === true){ //Replace with common break method
-				$this->getLevel()->setBlock($this, new Air(), false, false);
+				$this->getLevel()->setBlock($this, new Air(), false, false, $deep);
 
 				return Level::BLOCK_UPDATE_NORMAL;
 			}
@@ -117,23 +75,9 @@ class TallGrass extends Flowable {
 		return false;
 	}
 
-	/**
-	 * @return int
-	 */
-	public function getToolType(){
-		return Tool::TYPE_SHEARS;
-	}
-
-	/**
-	 * @param Item $item
-	 *
-	 * @return array
-	 */
-	public function getDrops(Item $item) : array{
+	public function getDrops(Item $item){
 		if(mt_rand(0, 15) === 0){
-			return [
-				[Item::WHEAT_SEEDS, 0, 1]
-			];
+			return [[Item::WHEAT_SEEDS, 0, 1]];
 		}
 
 		return [];

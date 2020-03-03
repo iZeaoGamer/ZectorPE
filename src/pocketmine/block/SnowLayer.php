@@ -26,60 +26,31 @@ use pocketmine\item\Tool;
 use pocketmine\level\Level;
 use pocketmine\Player;
 
-class SnowLayer extends Flowable {
+class SnowLayer extends Flowable{
 
 	protected $id = self::SNOW_LAYER;
 
-	/**
-	 * SnowLayer constructor.
-	 *
-	 * @param int $meta
-	 */
 	public function __construct($meta = 0){
 		$this->meta = $meta;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getName() : string{
+	public function getName(){
 		return "Snow Layer";
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function canBeReplaced(){
 		return true;
 	}
 
-	/**
-	 * @return float
-	 */
 	public function getHardness(){
 		return 0.1;
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getToolType(){
 		return Tool::TYPE_SHOVEL;
 	}
 
 
-	/**
-	 * @param Item        $item
-	 * @param Block       $block
-	 * @param Block       $target
-	 * @param int         $face
-	 * @param float       $fx
-	 * @param float       $fy
-	 * @param float       $fz
-	 * @param Player|null $player
-	 *
-	 * @return bool
-	 */
 	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = null){
 		$down = $this->getSide(0);
 		if($down->isSolid()){
@@ -91,15 +62,14 @@ class SnowLayer extends Flowable {
 		return false;
 	}
 
-	/**
-	 * @param int $type
-	 *
-	 * @return bool|int
-	 */
-	public function onUpdate($type){
+	public function onUpdate($type, $deep){
+		if (!Block::onUpdate($type, $deep)) {
+			return false;
+		}
+		$deep++;
 		if($type === Level::BLOCK_UPDATE_NORMAL){
 			if($this->getSide(0)->getId() === self::AIR){ //Replace with common break method
-				$this->getLevel()->setBlock($this, new Air(), true);
+				$this->getLevel()->setBlock($this, new Air(), true, true, $deep);
 
 				return Level::BLOCK_UPDATE_NORMAL;
 			}
@@ -108,12 +78,7 @@ class SnowLayer extends Flowable {
 		return false;
 	}
 
-	/**
-	 * @param Item $item
-	 *
-	 * @return array
-	 */
-	public function getDrops(Item $item) : array{
+	public function getDrops(Item $item){
 		if($item->isShovel() !== false){
 			return [
 				[Item::SNOWBALL, 0, 1],

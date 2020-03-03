@@ -25,58 +25,24 @@ use pocketmine\item\Tool;
 use pocketmine\math\AxisAlignedBB;
 use pocketmine\math\Vector3;
 
-class Fence extends Transparent {
-
-	const FENCE_OAK = 0;
-	const FENCE_SPRUCE = 1;
-	const FENCE_BIRCH = 2;
-	const FENCE_JUNGLE = 3;
-	const FENCE_ACACIA = 4;
-	const FENCE_DARKOAK = 5;
+class Fence extends Transparent{
 
 	protected $id = self::FENCE;
 
-	/**
-	 * Fence constructor.
-	 *
-	 * @param int $meta
-	 */
 	public function __construct($meta = 0){
 		$this->meta = $meta;
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getHardness(){
 		return 2;
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getToolType(){
 		return Tool::TYPE_AXE;
 	}
 
-	/**
-	 * @return int
-	 */
-	public function getBurnChance() : int{
-		return 5;
-	}
 
-	/**
-	 * @return int
-	 */
-	public function getBurnAbility() : int{
-		return 20;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getName() : string{
+	public function getName(){
 		static $names = [
 			0 => "Oak Fence",
 			1 => "Spruce Fence",
@@ -90,9 +56,6 @@ class Fence extends Transparent {
 		return $names[$this->meta & 0x07];
 	}
 
-	/**
-	 * @return AxisAlignedBB
-	 */
 	protected function recalculateBoundingBox(){
 
 		$north = $this->canConnect($this->getSide(Vector3::SIDE_NORTH));
@@ -115,11 +78,6 @@ class Fence extends Transparent {
 		);
 	}
 
-	/**
-	 * @param Block $block
-	 *
-	 * @return bool
-	 */
 	public function canConnect(Block $block){
 		return ($block instanceof Fence or $block instanceof FenceGate) ? true : $block->isSolid() and !$block->isTransparent();
 	}

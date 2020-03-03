@@ -22,41 +22,29 @@
 namespace pocketmine\block;
 
 
-use pocketmine\item\enchantment\Enchantment;
 use pocketmine\item\Item;
 use pocketmine\item\Tool;
-use pocketmine\level\Level;
+
+
 use pocketmine\math\AxisAlignedBB;
 
 
-class GrassPath extends Transparent {
+class GrassPath extends Transparent{
 
 	protected $id = self::GRASS_PATH;
 
-	/**
-	 * GrassPath constructor.
-	 */
-	public function __construct($meta = 0){
-		$this->meta = $meta;
+	public function __construct(){
+
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getName() : string{
+	public function getName(){
 		return "Grass Path";
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getToolType(){
 		return Tool::TYPE_SHOVEL;
 	}
 
-	/**
-	 * @return AxisAlignedBB
-	 */
 	protected function recalculateBoundingBox(){
 		return new AxisAlignedBB(
 			$this->x,
@@ -68,43 +56,13 @@ class GrassPath extends Transparent {
 		);
 	}
 
-	/**
-	 * @param int $type
-	 *
-	 * @return bool|int
-	 */
-	public function onUpdate($type){
-		if($type == Level::BLOCK_UPDATE_NORMAL){
-			$block = $this->getSide(self::SIDE_UP);
-			if($block->getId() != self::AIR){
-				$this->getLevel()->setBlock($this, new Dirt(), true);
-			}
-			return Level::BLOCK_UPDATE_NORMAL;
-		}
-		return false;
-	}
-
-	/**
-	 * @return float
-	 */
 	public function getHardness(){
 		return 0.6;
 	}
 
-	/**
-	 * @param Item $item
-	 *
-	 * @return array
-	 */
-	public function getDrops(Item $item) : array{
-		if($item->getEnchantmentLevel(Enchantment::TYPE_MINING_SILK_TOUCH) > 0){
-			return [
-				[Item::GRASS_PATH, 0, 1],
-			];
-		}else{
-			return [
-				[Item::DIRT, 0, 1],
-			];
-		}
+	public function getDrops(Item $item){
+		return [
+			[Item::DIRT, 0, 1],
+		];
 	}
 }

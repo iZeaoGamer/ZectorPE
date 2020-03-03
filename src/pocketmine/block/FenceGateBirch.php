@@ -22,14 +22,11 @@
 namespace pocketmine\block;
 
 
-class FenceGateBirch extends FenceGate {
+class FenceGateBirch extends FenceGate{
 
 	protected $id = self::FENCE_GATE_BIRCH;
 
-	/**
-	 * @return string
-	 */
-	public function getName() : string{
+	public function getName(){
 		return "Birch Fence Gate";
 	}
 }

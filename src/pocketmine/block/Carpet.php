@@ -26,37 +26,23 @@ use pocketmine\level\Level;
 use pocketmine\math\AxisAlignedBB;
 use pocketmine\Player;
 
-class Carpet extends Flowable {
+class Carpet extends Flowable{
 
 	protected $id = self::CARPET;
 
-	/**
-	 * Carpet constructor.
-	 *
-	 * @param int $meta
-	 */
 	public function __construct($meta = 0){
 		$this->meta = $meta;
 	}
 
-	/**
-	 * @return float
-	 */
 	public function getHardness(){
 		return 0.1;
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function isSolid(){
 		return true;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getName() : string{
+	public function getName(){
 		static $names = [
 			0 => "White Carpet",
 			1 => "Orange Carpet",
@@ -78,9 +64,6 @@ class Carpet extends Flowable {
 		return $names[$this->meta & 0x0f];
 	}
 
-	/**
-	 * @return AxisAlignedBB
-	 */
 	protected function recalculateBoundingBox(){
 
 		return new AxisAlignedBB(
@@ -92,19 +75,11 @@ class Carpet extends Flowable {
 			$this->z + 1
 		);
 	}
+	
+	public function getBoundingBox() {
+		return Block::getBoundingBox();
+	}
 
-	/**
-	 * @param Item        $item
-	 * @param Block       $block
-	 * @param Block       $target
-	 * @param int         $face
-	 * @param float       $fx
-	 * @param float       $fy
-	 * @param float       $fz
-	 * @param Player|null $player
-	 *
-	 * @return bool
-	 */
 	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = null){
 		$down = $this->getSide(0);
 		if($down->getId() !== self::AIR){
@@ -116,12 +91,10 @@ class Carpet extends Flowable {
 		return false;
 	}
 
-	/**
-	 * @param int $type
-	 *
-	 * @return bool|int
-	 */
-	public function onUpdate($type){
+	public function onUpdate($type, $deep){
+		if (!Block::onUpdate($type, $deep)) {
+			return false;
+		}
 		if($type === Level::BLOCK_UPDATE_NORMAL){
 			if($this->getSide(0)->getId() === self::AIR){
 				$this->getLevel()->useBreakOn($this);

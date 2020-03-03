@@ -114,7 +114,7 @@ class Slab2 extends Transparent{
 		return true;
 	}
 
-	public function getDrops(Item $item): array{
+	public function getDrops(Item $item){
 		if($item->isPickaxe() >= 1){
 			return [
 				[$this->id, $this->meta & 0x07, 1],

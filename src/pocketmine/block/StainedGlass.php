@@ -37,7 +37,7 @@ class StainedGlass extends Glass {
         return 0.3;
     }
     
-    public function getDrops(Item $item): array {
+    public function getDrops(Item $item) {
         return [];
     }
     

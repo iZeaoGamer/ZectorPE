@@ -22,11 +22,10 @@
 namespace pocketmine\block;
 
 use pocketmine\item\Item;
-use pocketmine\item\Tool;
 use pocketmine\math\AxisAlignedBB;
 use pocketmine\Player;
 
-abstract class Stair extends Transparent {
+abstract class Stair extends Solid{
 
 	/*
 	public function collidesWithBB(AxisAlignedBB $bb, &$list = []){
@@ -104,9 +103,6 @@ abstract class Stair extends Transparent {
 	}
 	*/
 
-	/**
-	 * @return AxisAlignedBB
-	 */
 	protected function recalculateBoundingBox(){
 
 		if(($this->getDamage() & 0x04) > 0){
@@ -130,18 +126,6 @@ abstract class Stair extends Transparent {
 		}
 	}
 
-	/**
-	 * @param Item        $item
-	 * @param Block       $block
-	 * @param Block       $target
-	 * @param int         $face
-	 * @param float       $fx
-	 * @param float       $fy
-	 * @param float       $fz
-	 * @param Player|null $player
-	 *
-	 * @return bool
-	 */
 	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = null){
 		$faces = [
 			0 => 0,
@@ -158,32 +142,17 @@ abstract class Stair extends Transparent {
 		return true;
 	}
 
-	/**
-	 * @return int
-	 */
-	public function getHardness(){
-		return 2;
-	}
-
-	/**
-	 * @return int
-	 */
-	public function getResistance(){
-		return 15;
-	}
-
-	/**
-	 * @param Item $item
-	 *
-	 * @return array
-	 */
-	public function getDrops(Item $item) : array{
-		if($item->isPickaxe() >= Tool::TIER_WOODEN){
+	public function getDrops(Item $item){
+		if($item->isPickaxe() >= 1){
 			return [
 				[$this->getId(), 0, 1],
 			];
 		}else{
 			return [];
 		}
+	}
+	
+	public function isUpsideDown() {
+		return $this->meta & 0x04;
 	}
 }

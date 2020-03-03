@@ -17,17 +17,14 @@
  * @link http://www.pocketmine.net/
  * 
  *
-*/
+ */
 
 namespace pocketmine\block;
 
-
 abstract class Transparent extends Block {
 
-	/**
-	 * @return bool
-	 */
-	public function isTransparent(){
+	public function isTransparent() {
 		return true;
 	}
+
 }

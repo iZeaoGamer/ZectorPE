@@ -27,28 +27,22 @@ use pocketmine\item\Item;
 /**
  * Air block
  */
-class Air extends Transparent {
+class Air extends Transparent{
 
 	protected $id = self::AIR;
 	protected $meta = 0;
 
-	/**
-	 * Air constructor.
-	 */
-	public function __construct($meta = 0){
-		$this->meta = $meta;
+	public function __construct(){
+
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getName() : string{
+	public function getName(){
 		return "Air";
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function canPassThrough(){
 		return true;
 	}
@@ -83,15 +77,12 @@ class Air extends Transparent {
 		return false;
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function isSolid(){
 		return false;
 	}
 
 	/**
-	 * @return null
+	 * @return AxisAlignedBB
 	 */
 	public function getBoundingBox(){
 		return null;
@@ -101,7 +92,7 @@ class Air extends Transparent {
 	 * @return int
 	 */
 	public function getHardness(){
-		return 0;
+		return -1;
 	}
 
 	/**

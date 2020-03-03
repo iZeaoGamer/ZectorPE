@@ -22,77 +22,46 @@
 namespace pocketmine\block;
 
 use pocketmine\entity\Entity;
-use pocketmine\item\enchantment\Enchantment;
 use pocketmine\item\Item;
 use pocketmine\item\Tool;
 
-class Cobweb extends Flowable {
+class Cobweb extends Flowable{
 
 	protected $id = self::COBWEB;
 
-	/**
-	 * Cobweb constructor.
-	 */
-	public function __construct($meta = 0){
-		$this->meta = $meta;
+	public function __construct(){
+
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function hasEntityCollision(){
 		return true;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getName() : string{
+	public function getName(){
 		return "Cobweb";
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getHardness(){
 		return 4;
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getToolType(){
-		return Tool::TYPE_SHEARS;
+		return Tool::TYPE_SWORD;
 	}
 
-	/**
-	 * @param Entity $entity
-	 */
 	public function onEntityCollide(Entity $entity){
 		$entity->resetFallDistance();
+		$entity->onGround = true;
 	}
 
-	/**
-	 * @param Item $item
-	 *
-	 * @return array
-	 */
-	public function getDrops(Item $item) : array{
-		if($item->isShears()){
+	public function getDrops(Item $item){
+		//TODO: correct drops
+		if ($item->isSword() >= 1) {
 			return [
-				[Item::COBWEB, 0, 1],
+				[Item::AIR, 0, 0],
 			];
-		}elseif($item->isSword() >= Tool::TIER_WOODEN){
-			if($item->getEnchantmentLevel(Enchantment::TYPE_MINING_SILK_TOUCH) > 0){
-				return [
-					[Item::COBWEB, 0, 1],
-				];
-			}else{
-				return [
-					[Item::STRING, 0, 1],
-				];
-			}
+		} else {
+			return [];
 		}
-		return [];
 	}
 }

@@ -44,7 +44,7 @@ class StandingBanner extends Transparent {
 		return Tool::TYPE_AXE;
 	}
 	
-	public function getDrops(Item $item): array {
+	public function getDrops(Item $item) {
 		return [
 			[Item::STANDING_BANNER, 0, 1]
 		];

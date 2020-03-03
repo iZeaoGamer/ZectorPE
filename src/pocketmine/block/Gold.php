@@ -24,46 +24,27 @@ namespace pocketmine\block;
 use pocketmine\item\Item;
 use pocketmine\item\Tool;
 
-class Gold extends Solid {
+class Gold extends Solid{
 
 	protected $id = self::GOLD_BLOCK;
 
-	/**
-	 * Gold constructor.
-	 *
-	 * @param int $meta
-	 */
-	public function __construct($meta = 0){
-		$this->meta = $meta;
+	public function __construct(){
+
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getName() : string{
+	public function getName(){
 		return "Gold Block";
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getHardness(){
 		return 3;
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getToolType(){
 		return Tool::TYPE_PICKAXE;
 	}
 
-	/**
-	 * @param Item $item
-	 *
-	 * @return array
-	 */
-	public function getDrops(Item $item) : array{
+	public function getDrops(Item $item){
 		if($item->isPickaxe() >= 4){
 			return [
 				[Item::GOLD_BLOCK, 0, 1],

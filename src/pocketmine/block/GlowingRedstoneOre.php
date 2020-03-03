@@ -22,39 +22,55 @@
 namespace pocketmine\block;
 
 use pocketmine\item\Item;
+use pocketmine\item\Tool;
 use pocketmine\level\Level;
 
-class GlowingRedstoneOre extends RedstoneOre implements SolidLight {
+class GlowingRedstoneOre extends Solid{
 
 	protected $id = self::GLOWING_REDSTONE_ORE;
 
-	/**
-	 * @return string
-	 */
-	public function getName() : string{
+	public function __construct(){
+
+	}
+
+	public function getHardness(){
+		return 3;
+	}
+
+	public function getName(){
 		return "Glowing Redstone Ore";
 	}
 
-	/**
-	 * @return int
-	 */
+	public function getToolType(){
+		return Tool::TYPE_PICKAXE;
+	}
+
 	public function getLightLevel(){
 		return 9;
 	}
 
-	/**
-	 * @param $type
-	 *
-	 * @return bool|int
-	 */
-	public function onUpdate($type){
+	public function onUpdate($type, $deep){
+		if (!Block::onUpdate($type, $deep)) {
+			return false;
+		}
+		$deep++;
 		if($type === Level::BLOCK_UPDATE_SCHEDULED or $type === Level::BLOCK_UPDATE_RANDOM){
-			$this->getLevel()->setBlock($this, Block::get(Item::REDSTONE_ORE, $this->meta), false, false);
+			$this->getLevel()->setBlock($this, Block::get(Item::REDSTONE_ORE, $this->meta), false, false, $deep);
 
 			return Level::BLOCK_UPDATE_WEAK;
 		}
 
 		return false;
+	}
+
+	public function getDrops(Item $item){
+		if($item->isPickaxe() >= 4){
+			return [
+				[Item::REDSTONE_DUST, 0, mt_rand(4, 5)],
+			];
+		}else{
+			return [];
+		}
 	}
 
 }

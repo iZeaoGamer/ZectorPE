@@ -32,43 +32,26 @@ use pocketmine\math\Vector3;
 use pocketmine\Player;
 use pocketmine\Server;
 
-class Cactus extends Transparent {
+class Cactus extends Transparent{
 
 	protected $id = self::CACTUS;
 
-	/**
-	 * Cactus constructor.
-	 *
-	 * @param int $meta
-	 */
 	public function __construct($meta = 0){
 		$this->meta = $meta;
 	}
 
-	/**
-	 * @return float
-	 */
 	public function getHardness(){
 		return 0.4;
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function hasEntityCollision(){
 		return true;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getName() : string{
+	public function getName(){
 		return "Cactus";
 	}
 
-	/**
-	 * @return AxisAlignedBB
-	 */
 	protected function recalculateBoundingBox(){
 
 		return new AxisAlignedBB(
@@ -81,22 +64,16 @@ class Cactus extends Transparent {
 		);
 	}
 
-	/**
-	 * @param Entity $entity
-	 */
 	public function onEntityCollide(Entity $entity){
 		$ev = new EntityDamageByBlockEvent($this, $entity, EntityDamageEvent::CAUSE_CONTACT, 1);
-		if($entity->attack($ev->getFinalDamage(), $ev) === true){
-			$ev->useArmors();
-		}
+		$entity->attack($ev->getFinalDamage(), $ev);
 	}
 
-	/**
-	 * @param int $type
-	 *
-	 * @return bool
-	 */
-	public function onUpdate($type){
+	public function onUpdate($type, $deep){
+		if (!Block::onUpdate($type, $deep)) {
+			return false;
+		}
+		$deep++;
 		if($type === Level::BLOCK_UPDATE_NORMAL){
 			$down = $this->getSide(0);
 			if($down->getId() !== self::SAND and $down->getId() !== self::CACTUS){
@@ -117,15 +94,15 @@ class Cactus extends Transparent {
 						if($b->getId() === self::AIR){
 							Server::getInstance()->getPluginManager()->callEvent($ev = new BlockGrowEvent($b, new Cactus()));
 							if(!$ev->isCancelled()){
-								$this->getLevel()->setBlock($b, $ev->getNewState(), true);
+								$this->getLevel()->setBlock($b, $ev->getNewState(), true, true, $deep);
 							}
 						}
 					}
 					$this->meta = 0;
-					$this->getLevel()->setBlock($this, $this);
+					$this->getLevel()->setBlock($this, $this, false, true, $deep);
 				}else{
 					++$this->meta;
-					$this->getLevel()->setBlock($this, $this);
+					$this->getLevel()->setBlock($this, $this, false, true, $deep);
 				}
 			}
 		}
@@ -133,18 +110,6 @@ class Cactus extends Transparent {
 		return false;
 	}
 
-	/**
-	 * @param Item        $item
-	 * @param Block       $block
-	 * @param Block       $target
-	 * @param int         $face
-	 * @param float       $fx
-	 * @param float       $fy
-	 * @param float       $fz
-	 * @param Player|null $player
-	 *
-	 * @return bool
-	 */
 	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = null){
 		$down = $this->getSide(0);
 		if($down->getId() === self::SAND or $down->getId() === self::CACTUS){
@@ -162,12 +127,7 @@ class Cactus extends Transparent {
 		return false;
 	}
 
-	/**
-	 * @param Item $item
-	 *
-	 * @return array
-	 */
-	public function getDrops(Item $item) : array{
+	public function getDrops(Item $item){
 		return [
 			[$this->id, 0, 1],
 		];

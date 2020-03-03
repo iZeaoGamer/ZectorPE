@@ -29,33 +29,15 @@ class DoublePlant extends Flowable {
 
 	protected $id = self::DOUBLE_PLANT;
 
-	const SUNFLOWER = 0;
-	const LILAC = 1;
-	const DOUBLE_TALLGRASS = 2;
-	const LARGE_FERN = 3;
-	const ROSE_BUSH = 4;
-	const PEONY = 5;
-
-	/**
-	 * DoublePlant constructor.
-	 *
-	 * @param int $meta
-	 */
-	public function __construct($meta = 0){
+	public function __construct($meta = 0) {
 		$this->meta = $meta;
 	}
 
-	/**
-	 * @return bool
-	 */
-	public function canBeReplaced(){
+	public function canBeReplaced() {
 		return true;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getName() : string{
+	public function getName() {
 		static $names = [
 			0 => "Sunflower",
 			1 => "Lilac",
@@ -67,79 +49,81 @@ class DoublePlant extends Flowable {
 		return $names[$this->meta & 0x07];
 	}
 
-	/**
-	 * @param int $type
-	 *
-	 * @return bool|int
-	 */
-	public function onUpdate($type){
-		if($type === Level::BLOCK_UPDATE_NORMAL){
-			if($this->getSide(0)->isTransparent() === true && !$this->getSide(0) instanceof DoublePlant){ //Replace with common break method
-				$this->getLevel()->setBlock($this, new Air(), false, false);
 
+	public function onUpdate($type, $deep){
+		if (!Block::onUpdate($type, $deep)) {
+			return false;
+		}
+		$deep++;
+		if ($type === Level::BLOCK_UPDATE_NORMAL) {
+			$blockUnder = $this->getSide(0);
+			if ($blockUnder->isTransparent() === true && $blockUnder->getId() != $this->id) { //Replace with common break method
+				$this->getLevel()->setBlock($this, new Air(), false, false, true);
 				return Level::BLOCK_UPDATE_NORMAL;
 			}
 		}
-
 		return false;
 	}
 
-	/**
-	 * @param Item        $item
-	 * @param Block       $block
-	 * @param Block       $target
-	 * @param int         $face
-	 * @param float       $fx
-	 * @param float       $fy
-	 * @param float       $fz
-	 * @param Player|null $player
-	 *
-	 * @return bool
-	 */
-	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = null){
-		$down = $this->getSide(0);
-		$up = $this->getSide(1);
-		if($down->getId() === self::GRASS or $down->getId() === self::DIRT){
-			$this->getLevel()->setBlock($block, $this, true);
-			$this->getLevel()->setBlock($up, Block::get($this->id, $this->meta ^ 0x08), true);
-			return true;
+	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = null) {
+		if ($this->getDamage() < 0x08) {
+			$down = $this->getSide(0);
+			if ($down->getId() === self::GRASS) {
+				$blockAbove = $this->level->getBlockIdAt($this->x, $this->y + 1, $this->z);
+				if ($blockAbove == Block::AIR) {
+					if ($this->level->setBlock($this, $this, true, true)) {
+						$upperPart = clone $this;
+						$upperPart->y++;
+						$upperPart->setDamage($this->getDamage() | 0x08);
+						if ($this->level->setBlock($upperPart, $upperPart, true, true)) {
+							return true;
+						}
+						$this->level->setBlock($this, Block::get(Block::AIR), true, true);
+					}
+				}
+			}
 		}
 		return false;
 	}
 
-	/**
-	 * @param Item $item
-	 *
-	 * @return mixed|void
-	 */
 	public function onBreak(Item $item){
-		$up = $this->getSide(1);
-		$down = $this->getSide(0);
-		if(($this->meta & 0x08) === 0x08){ // This is the Top part of flower
-			if($up->getId() === $this->id and $up->meta !== 0x08){ // Checks if the block ID and meta are right
-				$this->getLevel()->setBlock($up, new Air(), true, true);
-			}elseif($down->getId() === $this->id and $down->meta !== 0x08){
-				$this->getLevel()->setBlock($down, new Air(), true, true);
-			}
-		}else{ // Bottom Part of flower
-			if($up->getId() === $this->id and ($up->meta & 0x08) === 0x08){
-				$this->getLevel()->setBlock($up, new Air(), true, true);
-			}elseif($down->getId() === $this->id and ($down->meta & 0x08) === 0x08){
-				$this->getLevel()->setBlock($down, new Air(), true, true);
-			}
+		if (!$this->getLevel()->setBlock($this, new Air(), true, true)) {
+			return false;
 		}
+		$meta = $this->getDamage();
+		if ($meta < 0x08 && $this->level->getBlockIdAt($this->x, $this->y + 1, $this->z) == $this->id) {
+			$this->y++;
+			if ($this->level->setBlock($this, Block::get(Block::AIR), true, true)) {
+				return true;
+			}
+			$this->y--;
+			$this->level->setBlock($this, $this, true, true);
+			return false;
+		} else if ($meta >= 0x08 && $this->level->getBlockIdAt($this->x, $this->y - 1, $this->z) == $this->id) {
+			$this->y--;
+			if ($this->level->setBlock($this, Block::get(Block::AIR), true, true)) {
+				return true;
+			}
+			$this->y++;
+			$this->level->setBlock($this, $this, true, true);
+			return false;
+		}
+		return true;
+	}
+	
+	public function getBreakTime(Item $item) {
+		return 0.05;
 	}
 
-	/**
-	 * @param Item $item
-	 *
-	 * @return array
-	 */
-	public function getDrops(Item $item) : array{
-		if(($this->meta & 0x08) !== 0x08){
-			return [[Item::DOUBLE_PLANT, $this->meta, 1]];
-		}else{
-			return [];
+	public function getDrops(Item $item) {
+		if ($this->meta >= 0x08 && $this->level->getBlockIdAt($this->x, $this->y - 1, $this->z) == $this->id) {
+			$meta = $this->level->getBlockDataAt($this->x, $this->y - 1, $this->z);
+		} else {
+			$meta = $this->meta;
 		}
+		return [
+			[$this->id, $meta & 0x07, 1]
+		];
 	}
+
 }
